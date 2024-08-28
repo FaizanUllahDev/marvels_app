@@ -1,14 +1,11 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:test_app_marvels/core/di/di_server.dart';
 import 'package:test_app_marvels/core/error/exceptions.dart';
 import 'package:test_app_marvels/core/network/network_info.dart';
 import 'package:test_app_marvels/core/utils/utils.dart';
-import 'package:test_app_marvels/keys/keys.dart';
 
 import '../type_def/type_def.dart';
 
@@ -39,15 +36,10 @@ class NetworkClient {
     if (!isConnected) {
       throw const GeneralException(message: "No Internet");
     }
-    String ts = DateTime.now().millisecondsSinceEpoch.toString();
-    // Create the hash using the format: ts + privateKey + publicKey
-    String hash = md5
-        .convert(utf8.encode(ts + AppKeys.apiPrivateKey + AppKeys.apiPublicKey))
-        .toString();
 
     Response? response;
 
-    url = '$url?ts=$ts&apikey=${AppKeys.apiPublicKey}&hash=$hash';
+    url = '$url?${Utils.getHashed()}';
 
     try {
       switch (requestType) {

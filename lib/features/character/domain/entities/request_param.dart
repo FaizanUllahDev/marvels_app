@@ -17,7 +17,7 @@ class RequestParam {
     return <String, dynamic>{
       'offset': offset,
       'limit': limit,
-      'nameStartsWith': nameStartsWith,
+      if (nameStartsWith.isNotEmpty) 'nameStartsWith': nameStartsWith,
       'orderBy': orderBy.orderBy,
     };
   }

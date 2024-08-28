@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_app_marvels/core/enum/status_enum.dart';
 import 'package:test_app_marvels/core/extensions/string_extension.dart';
+import 'package:test_app_marvels/core/utils/utils.dart';
 import 'package:test_app_marvels/features/character/domain/entities/request_param.dart';
 import 'package:test_app_marvels/features/character/presentation/cubit/character_cubit.dart';
 import 'package:test_app_marvels/features/character/presentation/widgets/character_list_item.dart';
@@ -101,6 +102,9 @@ class _CharacterPageState extends State<CharacterPage> {
             child: BlocBuilder<CharacterCubit, CharacterState>(
                 builder: (context, state) {
               int length = state.charactersWrap.data?.results.length ?? 0;
+
+              Utils.debug('CharacterCubit length: $length');
+              Utils.debug('state state: $state');
 
               if (state.status == StatusEnum.loading && length == 0) {
                 return const Center(

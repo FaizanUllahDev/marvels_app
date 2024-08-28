@@ -19,10 +19,7 @@ class CharacterRemoteDataSourceImpl implements CharacterRemoteDataSource {
       final response = await client.invoke(
         NetworkConstants.kCharacters,
         RequestType.get,
-        queryParameters: {
-          'offset': param.offset,
-          'limit': param.limit,
-        },
+        queryParameters: param.toMap(),
       );
       if (response.statusCode == 200) {
         return CharacterDataWrapper.fromMap(response.data);

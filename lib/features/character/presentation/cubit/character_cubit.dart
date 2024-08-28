@@ -27,7 +27,11 @@ class CharacterCubit extends Cubit<CharacterState> {
     if (!loadMore) {
       emit(state.copyWith(
         status: StatusEnum.loading,
-        charactersWrap: null,
+        charactersWrap: const CharacterDataWrapper(
+          code: 0,
+          status: '',
+          data: null,
+        ),
         message: '',
         offset: 0,
       ));
