@@ -34,7 +34,7 @@ Future<void> dioInit() async {
   dio.interceptors.addAll([
     PrettyDioLogger(
       requestBody: true,
-      responseBody: false,
+      responseBody: true,
       request: true,
     ),
     CusotmDioInterceptor(),

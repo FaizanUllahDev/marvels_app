@@ -127,19 +127,21 @@ class _CharacterPageState extends State<CharacterPage> {
                 itemCount: length + 1,
                 itemBuilder: (context, index) {
                   // if index is the last index && no more data to load
-                  if (length == state.charactersWrap.data?.total) {
-                    return const Center(
-                      child: Text('No more data'),
-                    );
+                  if (length == state.charactersWrap.data?.total && index > 5) {
+                    return const SizedBox.shrink();
                   }
                   // if index is the last index && status is loading
-                  if (index == length) {
+                  if (index == length && index > 5) {
                     return const Center(
                       child: CircularProgressIndicator.adaptive(),
                     );
                   }
 
-                  final character = state.charactersWrap.data!.results[index];
+                  final character =
+                      state.charactersWrap.data?.results.elementAtOrNull(index);
+                  if (character == null) {
+                    return const SizedBox.shrink();
+                  }
                   return CharacterListItem(character: character);
                 },
                 controller: _scrollController,

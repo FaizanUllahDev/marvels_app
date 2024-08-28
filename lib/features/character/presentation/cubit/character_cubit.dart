@@ -69,7 +69,9 @@ class CharacterCubit extends Cubit<CharacterState> {
 
   // search from list of characters
   void search(String query) {
-    requestParam = requestParam.copyWith(nameStartsWith: query);
+    requestParam = requestParam.copyWith(
+      nameStartsWith: query.toLowerCase(),
+    );
     getCharacters();
   }
 }
