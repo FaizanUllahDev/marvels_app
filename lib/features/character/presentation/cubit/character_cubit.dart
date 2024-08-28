@@ -31,9 +31,9 @@ class CharacterCubit extends Cubit<CharacterState> {
         message: '',
         offset: 0,
       ));
-    } else {
-      emit(state.copyWith(status: StatusEnum.loading));
     }
+    emit(state.copyWith(status: StatusEnum.loading));
+
     try {
       final offset = loadMore ? state.offset + itemsPerPage : 0;
       requestParam = requestParam.copyWith(offset: offset);

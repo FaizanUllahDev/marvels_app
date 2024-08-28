@@ -29,98 +29,92 @@ class CharacterDetailsPage extends StatelessWidget {
               height: 250,
               width: double.infinity,
             ),
-            const SizedBox(height: 16),
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                charactor.description.isEmpty
-                    ? 'No description available'
-                    : charactor.description,
-                style: const TextStyle(fontSize: 16),
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 16),
+                  Text(
+                    charactor.description.isEmpty
+                        ? 'No description available'
+                        : charactor.description,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Stories:',
+                    style: Theme.of(context)
+                        .textTheme
+                        .displayLarge
+                        ?.copyWith(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  charactor.stories.items.isEmpty
+                      ? const Text('No stories')
+                      : SizedBox(
+                          height: 100,
+                          width: context.width,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: charactor.stories.items.length,
+                            itemBuilder: (context, index) {
+                              final story = charactor.stories.items[index];
+                              return StoriesWidgets(
+                                  name: story.name, link: story.resourceURI);
+                            },
+                          ),
+                        ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Events:',
+                    style: Theme.of(context)
+                        .textTheme
+                        .displayLarge
+                        ?.copyWith(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  charactor.events.items.isEmpty
+                      ? const Text('No events')
+                      : SizedBox(
+                          height: 100,
+                          child: ListView.builder(
+                            // shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: charactor.events.items.length,
+                            itemBuilder: (context, index) {
+                              final event = charactor.events.items[index];
+                              return StoriesWidgets(
+                                name: event.name,
+                                link: event.resourceURI,
+                              );
+                            },
+                          ),
+                        ),
+                  const SizedBox(height: 16),
+                  Text('Series:',
+                      style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                          fontSize: 18, fontWeight: FontWeight.bold)),
+                  charactor.series.items.isEmpty
+                      ? const Text('No series')
+                      : SizedBox(
+                          height: 100,
+                          width: double.infinity,
+                          child: ListView.builder(
+                            // shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: charactor.series.items.length,
+                            itemBuilder: (context, index) {
+                              final series = charactor.series.items[index];
+                              return StoriesWidgets(
+                                name: series.name,
+                                link: series.resourceURI,
+                              );
+                            },
+                          ),
+                        ),
+                ],
               ),
             ),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Stories:',
-                style: Theme.of(context)
-                    .textTheme
-                    .displayLarge
-                    ?.copyWith(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ),
-            charactor.stories.items.isEmpty
-                ? const Text('No stories')
-                : SizedBox(
-                    height: 100,
-                    width: context.width,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: charactor.stories.items.length,
-                      itemBuilder: (context, index) {
-                        final story = charactor.stories.items[index];
-                        return StoriesWidgets(
-                            name: story.name, link: story.resourceURI);
-                      },
-                    ),
-                  ),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Events:',
-                style: Theme.of(context)
-                    .textTheme
-                    .displayLarge
-                    ?.copyWith(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ),
-            charactor.events.items.isEmpty
-                ? const Text('No events')
-                : SizedBox(
-                    height: 100,
-                    child: ListView.builder(
-                      // shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: charactor.events.items.length,
-                      itemBuilder: (context, index) {
-                        final event = charactor.events.items[index];
-                        return StoriesWidgets(
-                          name: event.name,
-                          link: event.resourceURI,
-                        );
-                      },
-                    ),
-                  ),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('Series:',
-                  style: Theme.of(context)
-                      .textTheme
-                      .displayLarge
-                      ?.copyWith(fontSize: 18, fontWeight: FontWeight.bold)),
-            ),
-            charactor.series.items.isEmpty
-                ? const Text('No series')
-                : SizedBox(
-                    height: 100,
-                    width: double.infinity,
-                    child: ListView.builder(
-                      // shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: charactor.series.items.length,
-                      itemBuilder: (context, index) {
-                        final series = charactor.series.items[index];
-                        return StoriesWidgets(
-                          name: series.name,
-                          link: series.resourceURI,
-                        );
-                      },
-                    ),
-                  ),
           ],
         ),
       ),
@@ -159,6 +153,8 @@ class StoriesWidgets extends StatelessWidget {
           children: [
             Text(
               name,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
               style: Theme.of(context)
                   .textTheme
                   .displayLarge

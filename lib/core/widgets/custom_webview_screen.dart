@@ -58,7 +58,7 @@ class _CustomWebviewScreenState extends State<CustomWebviewScreen> {
             appBar: AppBar(
               title: const Text("Web Portal"),
               bottom: PreferredSize(
-                preferredSize: const Size.fromHeight(2),
+                preferredSize: const Size.fromHeight(50),
                 child: StatefulBuilder(
                   key: subSetState,
                   builder: (c, subState) {
@@ -68,6 +68,7 @@ class _CustomWebviewScreenState extends State<CustomWebviewScreen> {
                           padding: kAPadding12,
                           child: Text(
                             str,
+                            maxLines: 2,
                             textAlign: TextAlign.center,
                           ),
                         ),
