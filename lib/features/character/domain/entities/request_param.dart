@@ -1,5 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-
 class RequestParam {
   final int offset;
   final int limit;
@@ -14,7 +12,7 @@ class RequestParam {
   });
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
+    return {
       'offset': offset,
       'limit': limit,
       if (nameStartsWith.isNotEmpty) 'nameStartsWith': nameStartsWith,
@@ -37,7 +35,7 @@ class RequestParam {
   }
 }
 
-//orderBy
+// OrderByEnum for specifying sort order
 enum OrderByEnum {
   name,
   modified,
@@ -46,16 +44,14 @@ enum OrderByEnum {
 }
 
 extension OrderByEnumExtension on OrderByEnum {
-  // list
-  static List<String> get list {
-    return [
-      'name',
-      'modified',
-      '-name',
-      '-modified',
-    ];
-  }
+  static const List<String> _orderByStrings = [
+    'name',
+    'modified',
+    '-name',
+    '-modified',
+  ];
 
+  // Converts enum to string representation
   String get orderBy {
     switch (this) {
       case OrderByEnum.name:
@@ -66,11 +62,10 @@ extension OrderByEnumExtension on OrderByEnum {
         return '-name';
       case OrderByEnum.descendingModified:
         return '-modified';
-      default:
-        return 'name';
     }
   }
 
+  // Converts string to enum
   static OrderByEnum fromString(String? value) {
     switch (value) {
       case 'name':
@@ -82,7 +77,10 @@ extension OrderByEnumExtension on OrderByEnum {
       case '-modified':
         return OrderByEnum.descendingModified;
       default:
-        return OrderByEnum.name;
+        throw ArgumentError('Invalid orderBy value: $value');
     }
   }
+
+  // Provides a list of valid orderBy strings
+  static List<String> get list => _orderByStrings;
 }

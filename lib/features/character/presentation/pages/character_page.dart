@@ -30,14 +30,14 @@ class _CharacterPageState extends State<CharacterPage> {
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(
-      () {
-        if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent) {
-          characterCubit.loadNextPage();
-        }
-      },
-    );
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      characterCubit.loadNextPage();
+    }
   }
 
   @override
@@ -48,109 +48,110 @@ class _CharacterPageState extends State<CharacterPage> {
       ),
       body: Column(
         children: [
-          // search bar widget
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              children: [
-                // orderBy dropdown
-                DropdownButtonFormField<String>(
-                  value: characterCubit.requestParam.orderBy.orderBy,
-                  decoration: const InputDecoration(
-                    labelText: 'Order By',
-                  ),
-                  items: OrderByEnum.values
-                      .map(
-                        (e) => DropdownMenuItem<String>(
-                          value: e.orderBy,
-                          child: Text(e.name.toCapAndSpace()),
-                        ),
-                      )
-                      .toList(),
-                  onChanged: (String? value) {
-                    characterCubit.requestParam =
-                        characterCubit.requestParam.copyWith(
-                      orderBy: OrderByEnumExtension.fromString(value),
-                    );
-                    characterCubit.fetchCharacters();
-                  },
-                ),
-                const SizedBox(height: 10),
-                // search text field
-                TextField(
-                  decoration: const InputDecoration(
-                    hintText: 'Search character',
-                    prefixIcon: Icon(Icons.search),
-                  ),
-                  onChanged: (str) {
-                    // search character
-                    EasyDebounce.cancel('search');
-                    EasyDebounce.debounce(
-                      'search',
-                      const Duration(milliseconds: 500),
-                      () {
-                        characterCubit.search(str);
-                      },
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-
+          _buildSearchBar(),
           Expanded(
             child: BlocBuilder<CharacterCubit, CharacterState>(
-                builder: (context, state) {
-              int length = state.charactersWrap.data?.results.length ?? 0;
-
-              Utils.debug('CharacterCubit length: $length');
-              Utils.debug('state state: $state');
-
-              if (state.status == StatusEnum.loading && length == 0) {
-                return const Center(
-                  child: CircularProgressIndicator.adaptive(),
-                );
-              }
-
-              if (state.status == StatusEnum.error && length == 0) {
-                return Center(
-                  child: Text(state.message),
-                );
-              }
-
-              if (length == 0) {
-                return const Center(
-                  child: Text('No data found'),
-                );
-              }
-              return ListView.builder(
-                itemCount: length + 1,
-                itemBuilder: (context, index) {
-                  // if index is the last index && no more data to load
-                  if (length == state.charactersWrap.data?.total && index > 5) {
-                    return const SizedBox.shrink();
-                  }
-                  // if index is the last index && status is loading
-                  if (index == length && index > 5) {
-                    return const Center(
-                      child: CircularProgressIndicator.adaptive(),
-                    );
-                  }
-
-                  final character =
-                      state.charactersWrap.data?.results.elementAtOrNull(index);
-                  if (character == null) {
-                    return const SizedBox.shrink();
-                  }
-                  return CharacterListItem(character: character);
-                },
-                controller: _scrollController,
-                physics: const AlwaysScrollableScrollPhysics(),
-              );
-            }),
+              builder: (context, state) => _buildCharacterList(state),
+            ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildSearchBar() {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        children: [
+          DropdownButtonFormField<String>(
+            value: characterCubit.requestParam.orderBy.orderBy,
+            decoration: const InputDecoration(
+              labelText: 'Order By',
+            ),
+            items: OrderByEnum.values
+                .map(
+                  (e) => DropdownMenuItem<String>(
+                    value: e.orderBy,
+                    child: Text(e.name.toCapAndSpace()),
+                  ),
+                )
+                .toList(),
+            onChanged: (String? value) {
+              characterCubit.requestParam =
+                  characterCubit.requestParam.copyWith(
+                orderBy: OrderByEnumExtension.fromString(value),
+              );
+              characterCubit.fetchCharacters();
+            },
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            decoration: const InputDecoration(
+              hintText: 'Search character',
+              prefixIcon: Icon(Icons.search),
+            ),
+            onChanged: (str) {
+              EasyDebounce.cancel('search');
+              EasyDebounce.debounce(
+                'search',
+                const Duration(milliseconds: 500),
+                () => characterCubit.search(str),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCharacterList(CharacterState state) {
+    final length = state.charactersWrap.data?.results.length ?? 0;
+
+    Utils.debug('CharacterCubit length: $length');
+    Utils.debug('state state: $state');
+
+    if (state.status == StatusEnum.loading && length == 0) {
+      return const Center(
+        child: CircularProgressIndicator.adaptive(),
+      );
+    }
+
+    if (state.status == StatusEnum.error && length == 0) {
+      return Center(
+        child: Text(state.message),
+      );
+    }
+
+    if (length == 0) {
+      return const Center(
+        child: Text('No data found'),
+      );
+    }
+
+    return ListView.builder(
+      controller: _scrollController,
+      physics: const AlwaysScrollableScrollPhysics(),
+      itemCount: length + 1,
+      itemBuilder: (context, index) {
+        if (index == length) {
+          if (state.status == StatusEnum.loading) {
+            return const Center(
+              child: CircularProgressIndicator.adaptive(),
+            );
+          }
+          if (length == state.charactersWrap.data?.total) {
+            return const SizedBox.shrink();
+          }
+        }
+
+        final character =
+            state.charactersWrap.data?.results.elementAtOrNull(index);
+        if (character == null) {
+          return const SizedBox.shrink();
+        }
+        return CharacterListItem(character: character);
+      },
     );
   }
 }
