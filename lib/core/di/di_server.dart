@@ -37,7 +37,7 @@ Future<void> dioInit() async {
       responseBody: true,
       request: true,
     ),
-    CusotmDioInterceptor(),
+    CustomDioInterceptor(),
   ]);
   sl.registerLazySingleton(() => NetworkInfoImpl());
 
@@ -50,7 +50,7 @@ Future<void> dioInit() async {
 
 /// ===================== Custom Dio Interceptor =====================
 
-class CusotmDioInterceptor extends Interceptor {
+class CustomDioInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     // add Authorization header

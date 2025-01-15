@@ -72,7 +72,7 @@ class _CharacterPageState extends State<CharacterPage> {
                         characterCubit.requestParam.copyWith(
                       orderBy: OrderByEnumExtension.fromString(value),
                     );
-                    characterCubit.getCharacters();
+                    characterCubit.fetchCharacters();
                   },
                 ),
                 const SizedBox(height: 10),

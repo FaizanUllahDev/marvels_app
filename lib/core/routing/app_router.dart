@@ -32,7 +32,7 @@ final class AppRouter {
         name: Routes.home,
         path: Routes.home.ls,
         builder: (context, state) => BlocProvider<CharacterCubit>(
-          create: (context) => sl<CharacterCubit>()..getCharacters(),
+          create: (context) => sl<CharacterCubit>()..fetchCharacters(),
           child: const CharacterPage(),
         ),
       ),
